@@ -1,0 +1,550 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================
+// MODELS FOR INTERNATIONAL E-COMMERCE
+// ================================
+
+// Countries and regions for international support
+model Country {
+  id           String   @id @default(uuid())
+  code         String   @unique // ISO 3166-1 alpha-2 (BR, CN, US, etc.)
+  name         String
+  nameEn       String   @map("name_en")
+  nameLocal    String   @map("name_local")
+  timezone     String   @default("UTC")
+  currency     String   @default("USD")
+  language     String   @default("en")
+  phonePrefix  String   @map("phone_prefix")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  customers    Customer[]
+  suppliers    Supplier[]
+  orders       Order[]
+
+  @@map("countries")
+}
+
+// Localization and translations
+model Translation {
+  id        String   @id @default(uuid())
+  key       String   // Translation key (e.g., "order.confirmed")
+  language  String   // Language code (pt-BR, en, zh-CN)
+  value     String   // Translated text
+  context   String?  // Context or category
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([key, language])
+  @@map("translations")
+}
+
+// International customers from Shopify
+model Customer {
+  id                   String   @id @default(uuid())
+  shopifyCustomerId    BigInt?  @unique @map("shopify_customer_id")
+  name                 String
+  email                String?
+  phone                String?
+  countryId            String?  @map("country_id")
+  
+  // Brazilian documents (backward compatibility)
+  cpfCnpj              String?  @map("cpf_cnpj") // CPF or CNPJ
+  
+  // International documents
+  documentType         String?  @map("document_type") // passport, id_card, etc.
+  documentNumber       String?  @map("document_number")
+  
+  // Address fields (flexible for international)
+  addressCep           String?  @map("address_cep") // CEP format: 00000-000
+  addressStreet        String?  @map("address_street")
+  addressNumber        String?  @map("address_number")
+  addressComplement    String?  @map("address_complement")
+  addressNeighborhood  String?  @map("address_neighborhood")
+  addressCity          String?  @map("address_city")
+  addressState         String?  @map("address_state") // State/Province
+  addressZipCode       String?  @map("address_zip_code") // International postal code
+  
+  // Communication preferences
+  preferredLanguage    String?  @default("pt-BR") @map("preferred_language")
+  whatsappConsent      Boolean  @default(false) @map("whatsapp_consent")
+  lgpdConsentDate      DateTime? @map("lgpd_consent_date")
+  
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  country              Country? @relation(fields: [countryId], references: [id])
+  orders              Order[]
+  whatsappMessages    WhatsappMessage[]
+  lgpdConsents        LgpdConsent[]
+
+  @@map("customers")
+}
+
+// International suppliers
+model Supplier {
+  id                     String  @id @default(uuid())
+  companyName            String  @map("company_name")
+  tradeName              String? @map("trade_name")
+  countryId              String? @map("country_id")
+  
+  // Brazilian documents (backward compatibility)
+  cnpj                   String? @map("cnpj") // Brazilian company registration
+  
+  // International documents
+  businessLicense        String? @map("business_license")
+  taxId                  String? @map("tax_id")
+  
+  // Contact information
+  email                  String
+  phone                  String?
+  contactPerson          String? @map("contact_person")
+  preferredLanguage      String? @default("en") @map("preferred_language")
+  timeZone               String? @map("time_zone")
+  
+  // API integration
+  apiEndpoint            String? @map("api_endpoint")
+  apiKey                 String? @map("api_key")
+  notificationEmail      String? @map("notification_email")
+  
+  // Address fields (flexible for international)
+  addressCep             String? @map("address_cep")
+  addressStreet          String? @map("address_street")
+  addressNumber          String? @map("address_number")
+  addressCity            String? @map("address_city")
+  addressState           String? @map("address_state")
+  addressZipCode         String? @map("address_zip_code")
+  
+  // Performance metrics
+  averageProcessingTime  Int?    @map("average_processing_time") // in hours
+  performanceRating      Decimal @default(5.0) @map("performance_rating") @db.Decimal(3,2)
+  
+  // Operational settings
+  active                 Boolean @default(true)
+  minimumOrderValue      Decimal? @map("minimum_order_value") @db.Decimal(10,2)
+  shippingMethods        String[] @map("shipping_methods")
+  
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  country                Country? @relation(fields: [countryId], references: [id])
+  orders                 Order[]
+  orderItems             OrderItem[]
+  supplierCommunications SupplierCommunication[]
+  supplierProducts       SupplierProduct[]
+
+  @@map("suppliers")
+}
+
+// International orders
+model Order {
+  id                    String      @id @default(uuid())
+  shopifyOrderId        BigInt      @unique @map("shopify_order_id")
+  shopifyOrderNumber    String?     @map("shopify_order_number")
+  customerId            String      @map("customer_id")
+  supplierId            String?     @map("supplier_id")
+  countryId             String?     @map("country_id") // Order destination country
+  
+  // Order details
+  status                OrderStatus @default(PENDING)
+  totalAmount           Decimal     @map("total_amount") @db.Decimal(10,2)
+  currency              String      @default("BRL")
+  exchangeRate          Decimal?    @map("exchange_rate") @db.Decimal(10,6)
+  shippingAmount        Decimal?    @map("shipping_amount") @db.Decimal(10,2)
+  
+  // International shipping
+  shippingType          String?     @map("shipping_type") // domestic, international
+  customsValue          Decimal?    @map("customs_value") @db.Decimal(10,2)
+  customsDescription    String?     @map("customs_description")
+  
+  // Payment and tracking
+  paymentStatus         String?     @map("payment_status")
+  trackingCode          String?     @map("tracking_code")
+  carrier               String?
+  estimatedDelivery     DateTime?   @map("estimated_delivery")
+  shopifyFulfillmentId  BigInt?     @map("shopify_fulfillment_id")
+  
+  // Communication preferences
+  customerLanguage      String?     @default("pt-BR") @map("customer_language")
+  supplierLanguage      String?     @default("en") @map("supplier_language")
+  
+  createdAt             DateTime    @default(now()) @map("created_at")
+  updatedAt             DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  customer              Customer @relation(fields: [customerId], references: [id])
+  supplier              Supplier? @relation(fields: [supplierId], references: [id])
+  country               Country? @relation(fields: [countryId], references: [id])
+  orderItems            OrderItem[]
+  whatsappMessages      WhatsappMessage[]
+  supplierCommunications SupplierCommunication[]
+  systemLogs            SystemLog[]
+  payments              Payment[]
+  shipping              Shipping?
+
+  @@map("orders")
+}
+
+// Shopify line items
+model OrderItem {
+  id                String   @id @default(uuid())
+  orderId           String   @map("order_id")
+  shopifyVariantId  BigInt?  @map("shopify_variant_id")
+  productName       String   @map("product_name")
+  variantTitle      String?  @map("variant_title")
+  quantity          Int
+  price             Decimal  @db.Decimal(10,2)
+  sku               String?
+  supplierId        String?  @map("supplier_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  order             Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  supplier          Supplier? @relation(fields: [supplierId], references: [id])
+  product           Product? @relation(fields: [productId], references: [id])
+  productId         String?  @map("product_id")
+
+  @@map("order_items")
+}
+
+// WhatsApp communications
+model WhatsappMessage {
+  id                  String              @id @default(uuid())
+  orderId             String?             @map("order_id")
+  customerId          String              @map("customer_id")
+  customerPhone       String              @map("customer_phone")
+  messageType         WhatsappMessageType @map("message_type")
+  messageContent      String              @map("message_content")
+  mediaUrl            String?             @map("media_url")
+  whatsappMessageId   String?             @map("whatsapp_message_id")
+  status              MessageStatus       @default(PENDING)
+  sentAt              DateTime?           @map("sent_at")
+  deliveredAt         DateTime?           @map("delivered_at")
+  readAt              DateTime?           @map("read_at")
+  errorMessage        String?             @map("error_message")
+  createdAt           DateTime            @default(now()) @map("created_at")
+
+  // Relations
+  order               Order? @relation(fields: [orderId], references: [id])
+  customer            Customer @relation(fields: [customerId], references: [id])
+
+  @@map("whatsapp_messages")
+}
+
+// Supplier communications
+model SupplierCommunication {
+  id                    String                      @id @default(uuid())
+  orderId               String                      @map("order_id")
+  supplierId            String                      @map("supplier_id")
+  communicationType     SupplierCommunicationType   @map("communication_type")
+  messageContent        String?                     @map("message_content")
+  attachmentUrl         String?                     @map("attachment_url")
+  status                CommunicationStatus         @default(SENT)
+  sentAt                DateTime?                   @map("sent_at")
+  responseReceivedAt    DateTime?                   @map("response_received_at")
+  createdAt             DateTime                    @default(now()) @map("created_at")
+
+  // Relations
+  order                 Order @relation(fields: [orderId], references: [id])
+  supplier              Supplier @relation(fields: [supplierId], references: [id])
+
+  @@map("supplier_communications")
+}
+
+// LGPD consent tracking
+model LgpdConsent {
+  id            String      @id @default(uuid())
+  customerId    String      @map("customer_id")
+  consentType   ConsentType @map("consent_type")
+  consentGiven  Boolean     @map("consent_given")
+  consentDate   DateTime    @map("consent_date")
+  ipAddress     String?     @map("ip_address")
+  source        String      // shopify_checkout, whatsapp, admin_panel
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  customer      Customer @relation(fields: [customerId], references: [id])
+
+  @@map("lgpd_consents")
+}
+
+// User management for dashboard
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  name             String
+  password         String
+  role             UserRole  @default(USER)
+  active           Boolean   @default(true)
+  lastLoginAt      DateTime? @map("last_login_at")
+  resetToken       String?   @map("reset_token")
+  resetTokenExpiry DateTime? @map("reset_token_expiry")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// Configuration settings
+model SystemConfig {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("system_config")
+}
+
+// Brazilian products synchronized from Shopify
+model Product {
+  id                  String   @id @default(uuid())
+  shopifyProductId    BigInt   @unique @map("shopify_product_id")
+  name                String
+  description         String?
+  sku                 String?
+  price               Decimal  @db.Decimal(10, 2)
+  weight              Decimal? @db.Decimal(8, 3)
+  dimensions          String?  // formato: "LxWxH"
+  ncm                 String?  // Nomenclatura Comum do Mercosul
+  active              Boolean  @default(true)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  orderItems          OrderItem[]
+  supplierProducts    SupplierProduct[]
+
+  @@map("products")
+}
+
+// Junction table for supplier-product relationship
+model SupplierProduct {
+  id                String   @id @default(uuid())
+  supplierId        String   @map("supplier_id")
+  productId         String   @map("product_id")
+  supplierSku       String?  @map("supplier_sku")
+  supplierPrice     Decimal? @db.Decimal(10, 2) @map("supplier_price")
+  leadTime          Int?     @map("lead_time") // dias
+  minimumOrder      Int      @default(1) @map("minimum_order")
+  stock             Int      @default(0)
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  supplier          Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([supplierId, productId])
+  @@map("supplier_products")
+}
+
+// Payment tracking for Brazilian market
+model Payment {
+  id                String      @id @default(uuid())
+  orderId           String      @map("order_id")
+  shopifyPaymentId  BigInt?     @map("shopify_payment_id")
+  method            PaymentMethod
+  status            PaymentStatus
+  amount            Decimal     @db.Decimal(10, 2)
+  currency          String      @default("BRL")
+  pixKey            String?     @map("pix_key") // Brazilian instant payment
+  pixQrCode         String?     @map("pix_qr_code")
+  boletoBarcode     String?     @map("boleto_barcode") // Brazilian bank slip
+  boletoUrl         String?     @map("boleto_url")
+  creditCardLast4   String?     @map("credit_card_last4")
+  installments      Int?        @default(1)
+  gateway           String?     // Mercado Pago, PagSeguro, etc.
+  gatewayId         String?     @map("gateway_id")
+  processedAt       DateTime?   @map("processed_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  order             Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// Shipping tracking for Brazilian logistics
+model Shipping {
+  id                String       @id @default(uuid())
+  orderId           String       @unique @map("order_id")
+  trackingCode      String?      @map("tracking_code")
+  carrier           ShippingCarrier?
+  service           String?      // PAC, SEDEX, etc.
+  estimatedDelivery DateTime?    @map("estimated_delivery")
+  shippedAt         DateTime?    @map("shipped_at")
+  deliveredAt       DateTime?    @map("delivered_at")
+  status            ShippingStatus @default(PENDING)
+  cost              Decimal?     @db.Decimal(10, 2)
+  weight            Decimal?     @db.Decimal(8, 3)
+  dimensions        String?
+  recipientCep      String?      @map("recipient_cep")
+  recipientAddress  String?      @map("recipient_address")
+  notes             String?
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  order             Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  trackingEvents    ShippingEvent[]
+
+  @@map("shippings")
+}
+
+// Shipping tracking events
+model ShippingEvent {
+  id          String    @id @default(uuid())
+  shippingId  String    @map("shipping_id")
+  status      String
+  description String
+  location    String?
+  eventDate   DateTime  @map("event_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  shipping    Shipping  @relation(fields: [shippingId], references: [id], onDelete: Cascade)
+
+  @@map("shipping_events")
+}
+
+// System logs for auditing and compliance
+model SystemLog {
+  id          String    @id @default(uuid())
+  level       LogLevel
+  service     String
+  action      String
+  message     String
+  metadata    Json?
+  userId      String?   @map("user_id")
+  ipAddress   String?   @map("ip_address")
+  userAgent   String?   @map("user_agent")
+  orderId     String?   @map("order_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  order       Order?    @relation(fields: [orderId], references: [id])
+
+  @@index([service, action])
+  @@index([createdAt])
+  @@map("system_logs")
+}
+
+// ================
+// ENUMS
+// ================
+
+enum OrderStatus {
+  PENDING           // Pedido recebido, aguardando processamento
+  SENT_TO_SUPPLIER  // Enviado para fornecedor
+  PROCESSING        // Fornecedor processando
+  SHIPPED           // Enviado para entrega
+  DELIVERED         // Entregue
+  CANCELLED         // Cancelado
+  FAILED            // Falha no processamento
+}
+
+enum WhatsappMessageType {
+  ORDER_CONFIRMATION    // Confirmação do pedido
+  TRACKING_SENT        // Código de rastreamento enviado
+  DELIVERY_UPDATE      // Atualização de entrega
+  CUSTOMER_SERVICE     // Atendimento ao cliente
+  MARKETING           // Mensagem de marketing
+}
+
+enum MessageStatus {
+  PENDING     // Aguardando envio
+  SENT        // Enviado
+  DELIVERED   // Entregue
+  READ        // Lido
+  FAILED      // Falha no envio
+}
+
+enum SupplierCommunicationType {
+  ORDER_SENT          // Pedido enviado
+  TRACKING_RECEIVED   // Rastreamento recebido
+  PHOTO_RECEIVED      // Foto recebida
+  STATUS_UPDATE       // Atualização de status
+}
+
+enum CommunicationStatus {
+  SENT        // Enviado
+  ACKNOWLEDGED // Reconhecido
+  COMPLETED   // Completado
+  FAILED      // Falhou
+}
+
+enum LogLevel {
+  INFO
+  WARNING
+  ERROR
+  DEBUG
+}
+
+enum ConsentType {
+  WHATSAPP_MARKETING    // Marketing via WhatsApp
+  DATA_PROCESSING       // Processamento de dados
+  COOKIES              // Uso de cookies
+}
+
+enum UserRole {
+  ADMIN       // Administrador total
+  MANAGER     // Gerente de operações
+  USER        // Usuário comum
+  READONLY    // Apenas leitura
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  BOLETO
+  BANK_TRANSFER
+  CASH_ON_DELIVERY
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  APPROVED
+  REJECTED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum ShippingCarrier {
+  CORREIOS
+  JADLOG
+  TOTAL_EXPRESS
+  BRASPRESS
+  MERCADO_ENVIOS
+  CUSTOM
+}
+
+enum ShippingStatus {
+  PENDING
+  PREPARING
+  SHIPPED
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  RETURNED
+  CANCELLED
+}
