@@ -1,18 +1,18 @@
 import { prisma } from '../config/database';
 import { logger } from '../config/logger';
-import { BaseService } from './base.service';
 import {
-  addJob,
-  JobType,
-  orderProcessingQueue,
-  supplierCommunicationQueue,
-  notificationQueue,
-  OrderProcessingJobData,
-  SupplierCommunicationJobData,
-  NotificationJobData
+    addJob,
+    JobType,
+    NotificationJobData,
+    notificationQueue,
+    OrderProcessingJobData,
+    orderProcessingQueue,
+    SupplierCommunicationJobData,
+    supplierCommunicationQueue
 } from '../config/queues';
-import { WhatsAppService } from './whatsapp.service';
 import { formatDateTime } from '../utils/brazilian';
+import { BaseService } from './base.service';
+import { WhatsAppService } from './whatsapp.service';
 
 export interface OrderRoutingRule {
   id: string;

@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 // import { PedidoService } from '../services/pedido.service';
-import { validateRequest } from '../middleware/validation';
+import { logger } from '../config/logger';
 import { authentication } from '../middleware/auth';
+import { validateRequest } from '../middleware/validation';
 import {
-  pedidoSchema,
-  paginationSchema
+    paginationSchema,
+    pedidoSchema
 } from '../schemas';
 import { BrazilianTimeUtils } from '../utils/brazilian';
-import { logger } from '../config/logger';
 
 // Schema para atualização de pedido
 const updatePedidoSchema = z.object({

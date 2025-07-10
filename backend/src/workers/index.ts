@@ -1,19 +1,19 @@
 import { Job } from 'bull';
 import { logger } from '../config/logger';
 import {
-  orderProcessingQueue,
-  supplierCommunicationQueue,
-  whatsappQueue,
-  trackingQueue,
-  notificationQueue
+    notificationQueue,
+    orderProcessingQueue,
+    supplierCommunicationQueue,
+    trackingQueue,
+    whatsappQueue
 } from '../config/queues';
 
 // Importar workers
+import { notificationWorker } from './notification.worker';
 import { orderWorker } from './order.worker';
-import { whatsappWorker } from './whatsapp.worker';
 import { supplierWorker } from './supplier.worker';
 import { trackingWorker } from './tracking.worker';
-import { notificationWorker } from './notification.worker';
+import { whatsappWorker } from './whatsapp.worker';
 
 /**
  * Registra todos os workers para processar as filas

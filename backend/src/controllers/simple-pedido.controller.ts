@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { BrazilianTimeUtils } from '../utils/brazilian';
 import { logger } from '../config/simple-logger';
+import { BrazilianTimeUtils } from '../utils/brazilian';
 
 /**
  * Controller simplificado para teste dos pedidos

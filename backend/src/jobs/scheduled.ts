@@ -1,9 +1,9 @@
 import { CronJob } from 'cron';
 import { logger } from '../config/logger';
-import { 
-  trackingQueue,
-  whatsappQueue,
-  supplierCommunicationQueue
+import {
+    supplierCommunicationQueue,
+    trackingQueue,
+    whatsappQueue
 } from '../config/queues';
 
 /**
@@ -16,14 +16,14 @@ export function setupScheduledJobs() {
   new CronJob('0 */4 * * *', async () => {
     try {
       logger.info('🔄 Adicionando job de sincronização de rastreamento');
-      
+
       await trackingQueue.add('syncWithCorreios', {
         trackingCode: 'BR123456789'
       }, {
         priority: 3,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de sincronização adicionado à fila');
     } catch (error) {
       logger.error('❌ Erro na sincronização agendada:', error);
@@ -34,14 +34,14 @@ export function setupScheduledJobs() {
   new CronJob('0 9 * * *', async () => {
     try {
       logger.info('🔍 Iniciando detecção de pedidos atrasados');
-      
+
       await trackingQueue.add('detectDelayedOrders', {
         maxDeliveryDays: 10
       }, {
         priority: 2,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de detecção de atrasos adicionado');
     } catch (error) {
       logger.error('❌ Erro na detecção de atrasos:', error);
@@ -52,14 +52,14 @@ export function setupScheduledJobs() {
   new CronJob('0 */6 * * *', async () => {
     try {
       logger.info('📊 Iniciando sincronização de estoque');
-      
+
       await supplierCommunicationQueue.add('syncSupplierInventory', {
         supplierId: 'all'
       }, {
         priority: 3,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de sincronização de estoque adicionado');
     } catch (error) {
       logger.error('❌ Erro na sincronização de estoque:', error);
@@ -70,7 +70,7 @@ export function setupScheduledJobs() {
   new CronJob('0 10 * * *', async () => {
     try {
       logger.info('⭐ Enviando lembretes de avaliação');
-      
+
       await whatsappQueue.add('sendReviewReminder', {
         orderId: 'delivered-orders-check',
         customerPhone: '+5511999999999',
@@ -80,7 +80,7 @@ export function setupScheduledJobs() {
         priority: 4,
         attempts: 2
       });
-      
+
       logger.info('✅ Job de lembrete de avaliação adicionado');
     } catch (error) {
       logger.error('❌ Erro no envio de lembretes:', error);
@@ -91,7 +91,7 @@ export function setupScheduledJobs() {
   new CronJob('0 8 * * 1', async () => {
     try {
       logger.info('📊 Monitoramento semanal de fornecedores');
-      
+
       await supplierCommunicationQueue.add('monitorSupplierPerformance', {
         supplierId: 'all',
         period: '7d'
@@ -99,7 +99,7 @@ export function setupScheduledJobs() {
         priority: 2,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de monitoramento de fornecedores adicionado');
     } catch (error) {
       logger.error('❌ Erro no monitoramento de fornecedores:', error);
@@ -110,7 +110,7 @@ export function setupScheduledJobs() {
   new CronJob('0 18 * * *', async () => {
     try {
       logger.info('📊 Gerando relatório diário de rastreamento');
-      
+
       await trackingQueue.add('generateTrackingReport', {
         startDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         endDate: new Date().toISOString(),
@@ -119,7 +119,7 @@ export function setupScheduledJobs() {
         priority: 2,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de relatório diário adicionado');
     } catch (error) {
       logger.error('❌ Erro na geração de relatório:', error);
@@ -130,14 +130,14 @@ export function setupScheduledJobs() {
   new CronJob('0 20 * * *', async () => {
     try {
       logger.info('📈 Monitoramento de performance de entrega');
-      
+
       await trackingQueue.add('monitorDeliveryPerformance', {
         period: '30d'
       }, {
         priority: 2,
         attempts: 3
       });
-      
+
       logger.info('✅ Job de monitoramento de performance adicionado');
     } catch (error) {
       logger.error('❌ Erro no monitoramento de performance:', error);

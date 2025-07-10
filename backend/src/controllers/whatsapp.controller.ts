@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { WhatsAppService } from '@/services/whatsapp.service';
 import { logger } from '@/config/logger';
+import { WhatsAppService } from '@/services/whatsapp.service';
+import { Request, Response } from 'express';
 
 export class WhatsAppController {
   private whatsappService: WhatsAppService;

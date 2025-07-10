@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { prisma } from '@/config/database';
+import { Request, Response } from 'express';
 import { logger } from '../config/logger';
 import { BaseService } from '../services/base.service';
 import { PaginationParams } from '../types';

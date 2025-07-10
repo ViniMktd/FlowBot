@@ -1,7 +1,7 @@
 import { prisma } from '@/config/database';
 import { logger } from '@/config/logger';
-import { BaseService } from './base.service';
 import { PaginationParams } from '../types';
+import { BaseService } from './base.service';
 
 interface IOrderItem {
   shopifyVariantId?: bigint;

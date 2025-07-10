@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { AuthService } from '@/services/auth.service';
 import { logger } from '@/config/logger';
+import { AuthService } from '@/services/auth.service';
 import { AppError } from '@/utils/errors';
+import { Request, Response } from 'express';
 
 export class AuthController {
   private authService: AuthService;

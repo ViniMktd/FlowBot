@@ -1,9 +1,9 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import 'dayjs/locale/pt-br';
-import { BrazilianAddress, CPFValidation, CNPJValidation } from '../types';
+import { BrazilianAddress, CNPJValidation, CPFValidation } from '../types';
 
 // Configurar dayjs para o Brasil
 dayjs.extend(utc);

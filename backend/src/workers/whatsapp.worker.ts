@@ -18,7 +18,7 @@ export class WhatsAppWorker {
    */
   async sendOrderConfirmation(job: Job): Promise<void> {
     const { orderId, customerPhone, customerName, orderNumber } = job.data;
-    
+
     try {
       logger.info(`📱 Enviando confirmação de pedido via WhatsApp: ${orderId}`, {
         jobId: job.id,
@@ -55,7 +55,7 @@ export class WhatsAppWorker {
    */
   async sendShippingNotification(job: Job): Promise<void> {
     const { orderId, customerPhone, customerName, orderNumber, trackingCode } = job.data;
-    
+
     try {
       logger.info(`📦 Enviando notificação de envio: ${orderId}`, {
         jobId: job.id,
@@ -93,7 +93,7 @@ export class WhatsAppWorker {
    */
   async sendDeliveryNotification(job: Job): Promise<void> {
     const { orderId, customerPhone, customerName, orderNumber } = job.data;
-    
+
     try {
       logger.info(`🎉 Enviando notificação de entrega: ${orderId}`, {
         jobId: job.id,
@@ -127,7 +127,7 @@ export class WhatsAppWorker {
    */
   async sendCancellationNotification(job: Job): Promise<void> {
     const { orderId, customerPhone, customerName, orderNumber, reason } = job.data;
-    
+
     try {
       logger.info(`❌ Enviando notificação de cancelamento: ${orderId}`, {
         jobId: job.id,
@@ -163,7 +163,7 @@ export class WhatsAppWorker {
    */
   async sendReviewReminder(job: Job): Promise<void> {
     const { orderId, customerPhone, customerName, orderNumber } = job.data;
-    
+
     try {
       logger.info(`⭐ Enviando lembrete de avaliação: ${orderId}`, {
         jobId: job.id,
@@ -199,7 +199,7 @@ export class WhatsAppWorker {
    */
   async sendCustomMessage(job: Job): Promise<void> {
     const { customerPhone, message, orderId } = job.data;
-    
+
     try {
       logger.info(`💬 Enviando mensagem personalizada`, {
         jobId: job.id,
@@ -229,7 +229,7 @@ export class WhatsAppWorker {
    */
   async processIncomingMessage(job: Job): Promise<void> {
     const { messageId, customerPhone, message } = job.data;
-    
+
     try {
       logger.info(`📥 Processando mensagem recebida`, {
         jobId: job.id,

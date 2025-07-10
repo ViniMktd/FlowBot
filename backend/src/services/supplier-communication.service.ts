@@ -1,20 +1,17 @@
 import axios, { AxiosResponse } from 'axios';
 import { prisma } from '../config/database';
 import { logger } from '../config/logger';
-import { BaseService } from './base.service';
 import {
-  addJob,
-  JobType,
-  supplierCommunicationQueue,
-  notificationQueue,
-  trackingQueue,
-  SupplierCommunicationJobData,
-  NotificationJobData,
-  TrackingJobData
+    addJob,
+    JobType,
+    NotificationJobData,
+    notificationQueue,
+    TrackingJobData,
+    trackingQueue
 } from '../config/queues';
-import { formatDateTime, formatCurrency } from '../utils/brazilian';
-import { i18nService, t } from './i18n.service';
-import { InternationalValidator } from '../utils/international-validators';
+import { formatDateTime } from '../utils/brazilian';
+import { BaseService } from './base.service';
+import { t } from './i18n.service';
 
 export interface SupplierApiResponse {
   success: boolean;
@@ -138,12 +135,12 @@ export class SupplierCommunicationService extends BaseService {
 
       // Detectar se é fornecedor chinês e preparar dados adequadamente
       const isChineseSupplier = await this.isChineseSupplier(order.supplier);
-      const orderData = isChineseSupplier 
+      const orderData = isChineseSupplier
         ? await this.prepareChineseOrderData(order)
         : await this.prepareOrderData(order);
 
       // Determinar idioma de comunicação
-      const supplierLanguage = order.supplier.preferredLanguage || 
+      const supplierLanguage = order.supplier.preferredLanguage ||
                                (isChineseSupplier ? 'zh-CN' : 'en');
 
       // Traduzir dados se necessário
@@ -441,7 +438,7 @@ export class SupplierCommunicationService extends BaseService {
    */
   private async prepareChineseOrderData(order: any): Promise<ChineseSupplierOrderData> {
     const baseData = await this.prepareOrderData(order);
-    
+
     return {
       ...baseData,
       language: 'zh-CN',

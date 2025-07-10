@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import { prisma } from '@/config/database';
-import { cache } from '@/config/redis';
 import { logger } from '@/config/logger';
+import { cache } from '@/config/redis';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 // Middleware de autenticação
 export async function authentication(req: Request, res: Response, next: NextFunction) {

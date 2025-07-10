@@ -1,13 +1,13 @@
-import 'reflect-metadata';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
 import compression from 'compression';
-import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import { createServer } from 'http';
+import morgan from 'morgan';
+import 'reflect-metadata';
 import { Server as SocketIOServer } from 'socket.io';
 
 // Import configurations
@@ -20,20 +20,20 @@ import { logger } from '@/config/logger';
 import { registerWorkers, shutdownWorkers } from '@/workers';
 
 // Import routes
+import analyticsRoutes from '@/routes/analytics.routes';
 import authRoutes from '@/routes/auth';
-import simplePedidosRoutes from '@/routes/simple-pedidos';
-import orderRoutes from '@/routes/orders';
 import customerRoutes from '@/routes/customers';
+import dashboardRoutes from '@/routes/dashboard.routes';
+import mercadoPagoWebhooksRoutes from '@/routes/mercadopago-webhooks.routes';
+import mercadoPagoRoutes from '@/routes/mercadopago.routes';
+import orderRoutes from '@/routes/orders';
+import queueRoutes from '@/routes/queues';
+import shippingRoutes from '@/routes/shipping.routes';
+import shopifyConfigRoutes from '@/routes/shopify-config.routes';
+import shopifyWebhooksRoutes from '@/routes/shopify-webhooks.routes';
+import simplePedidosRoutes from '@/routes/simple-pedidos';
 import supplierRoutes from '@/routes/suppliers';
 import whatsappRoutes from '@/routes/whatsapp';
-import queueRoutes from '@/routes/queues';
-import dashboardRoutes from '@/routes/dashboard.routes';
-import analyticsRoutes from '@/routes/analytics.routes';
-import shopifyWebhooksRoutes from '@/routes/shopify-webhooks.routes';
-import shopifyConfigRoutes from '@/routes/shopify-config.routes';
-import mercadoPagoRoutes from '@/routes/mercadopago.routes';
-import mercadoPagoWebhooksRoutes from '@/routes/mercadopago-webhooks.routes';
-import shippingRoutes from '@/routes/shipping.routes';
 
 // Import middleware
 import { errorHandler } from '@/middleware/errorHandler';
@@ -232,4 +232,5 @@ if (require.main === module) {
   startServer();
 }
 
-export { app, server, io };
+export { app, io, server };
+

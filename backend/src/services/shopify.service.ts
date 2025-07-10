@@ -1,6 +1,6 @@
-import { BaseService } from './base.service';
 import { logger } from '../config/logger';
 import { ApiResponse } from '../types';
+import { BaseService } from './base.service';
 
 /**
  * Service para integração com Shopify

@@ -1,8 +1,8 @@
 import { prisma } from '@/config/database';
 import { logger } from '@/config/logger';
 import { AppError } from '@/utils/errors';
-import { WhatsAppService } from './whatsapp.service';
 import { PaginationParams } from '../types';
+import { WhatsAppService } from './whatsapp.service';
 
 interface IOrderItem {
   shopifyVariantId?: number;

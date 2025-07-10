@@ -1,16 +1,16 @@
-import { Router } from 'express';
 import { AuthController } from '@/controllers/auth.controller';
-import { validateRequest } from '@/middleware/validation';
 import { authentication } from '@/middleware/auth';
+import { validateRequest } from '@/middleware/validation';
 import {
-  loginSchema,
-  registerSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
-  refreshTokenSchema,
-  updateProfileSchema,
-  changePasswordSchema
+    changePasswordSchema,
+    forgotPasswordSchema,
+    loginSchema,
+    refreshTokenSchema,
+    registerSchema,
+    resetPasswordSchema,
+    updateProfileSchema
 } from '@/schemas';
+import { Router } from 'express';
 
 const router = Router();
 const authController = new AuthController();

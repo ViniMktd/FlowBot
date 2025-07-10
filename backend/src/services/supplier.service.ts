@@ -1,7 +1,7 @@
 import { prisma } from '@/config/database';
 import { logger } from '@/config/logger';
+import { formatCNPJ, validateCNPJ } from '@/utils/brazilian';
 import { AppError } from '@/utils/errors';
-import { validateCNPJ, formatCNPJ } from '@/utils/brazilian';
 
 interface ISupplierData {
   companyName: string;

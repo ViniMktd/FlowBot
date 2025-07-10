@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { logger } from '@/config/logger';
+import { Request, Response } from 'express';
 
 // Middleware para tratar rotas não encontradas
 export function notFound(req: Request, res: Response) {

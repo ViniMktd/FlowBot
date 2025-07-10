@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { BaseService, HandleServiceErrors } from './base.service';
-import { ApiResponse, PaginationParams, PaginatedResponse } from '../types';
-import { BrazilianTimeUtils, BrazilianCodeGenerator } from '../utils/brazilian';
 import { redisClient } from '../config/redis';
+import { ApiResponse, PaginatedResponse, PaginationParams } from '../types';
+import { BrazilianCodeGenerator, BrazilianTimeUtils } from '../utils/brazilian';
+import { BaseService, HandleServiceErrors } from './base.service';
 
 // Tipos do Prisma
 type Pedido = {

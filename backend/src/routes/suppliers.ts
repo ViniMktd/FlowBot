@@ -1,12 +1,12 @@
-import { Router } from 'express';
 import { SupplierController } from '@/controllers/supplier.controller';
-import { validateRequest } from '@/middleware/validation';
 import { authentication } from '@/middleware/auth';
+import { validateRequest } from '@/middleware/validation';
 import {
-  supplierSchema,
-  updateSupplierSchema,
-  performanceRatingSchema
+    performanceRatingSchema,
+    supplierSchema,
+    updateSupplierSchema
 } from '@/schemas';
+import { Router } from 'express';
 
 const router = Router();
 const supplierController = new SupplierController();

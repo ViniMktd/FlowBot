@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { NextFunction, Request, Response } from 'express';
 import { logger } from '../config/logger';
-import { ApiResponse, PaginationParams, PaginatedResponse } from '../types';
+import { ApiResponse, PaginatedResponse, PaginationParams } from '../types';
 
 /**
  * Classe base para services com funcionalidades comuns

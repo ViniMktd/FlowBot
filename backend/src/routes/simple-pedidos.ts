@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
-  simpleHealthCheck,
-  simpleListPedidos,
-  simpleGetEstatisticas,
-  simpleGetPedidoById
+    simpleGetEstatisticas,
+    simpleGetPedidoById,
+    simpleHealthCheck,
+    simpleListPedidos
 } from '../controllers/simple-pedido.controller';
 
 const router = Router();

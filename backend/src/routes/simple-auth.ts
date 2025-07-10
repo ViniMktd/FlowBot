@@ -1,5 +1,5 @@
-import { Router } from 'express';
 import { logger } from '@/config/simple-logger';
+import { Router } from 'express';
 
 const router = Router();
 

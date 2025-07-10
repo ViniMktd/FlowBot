@@ -1,44 +1,43 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { HelmetProvider } from 'react-helmet-async';
-import { Toaster } from 'react-hot-toast';
-import { Suspense } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/zh-cn';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import React, { Suspense } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider } from 'react-redux';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 
 // Import i18n configuration
 import './i18n';
 
 // Configurações locais
-import { store, persistor } from '@/store';
-import { theme } from '@/theme';
-import { SocketProvider } from '@/providers/SocketProvider';
-import { AuthProvider } from '@/providers/AuthProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingScreen } from '@/components/LoadingScreen';
+import { AuthProvider } from '@/providers/AuthProvider';
+import { SocketProvider } from '@/providers/SocketProvider';
+import { persistor, store } from '@/store';
+import { theme } from '@/theme';
 
 // Páginas
-import { LoginPage } from '@/pages/Auth/LoginPage';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
-import { DashboardPage } from '@/pages/Dashboard/DashboardPage';
-import { OrdersPage } from '@/pages/Orders/OrdersPage';
-import { OrderDetailsPage } from '@/pages/Orders/OrderDetailsPage';
-import { SuppliersPage } from '@/pages/Suppliers/SuppliersPage';
-import { CustomersPage } from '@/pages/Customers/CustomersPage';
-import { CommunicationsPage } from '@/pages/Communications/CommunicationsPage';
 import { AnalyticsPage } from '@/pages/Analytics/AnalyticsPage';
-import { SettingsPage } from '@/pages/Settings/SettingsPage';
+import { LoginPage } from '@/pages/Auth/LoginPage';
+import { CommunicationsPage } from '@/pages/Communications/CommunicationsPage';
+import { CustomersPage } from '@/pages/Customers/CustomersPage';
+import { DashboardPage } from '@/pages/Dashboard/DashboardPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import { OrderDetailsPage } from '@/pages/Orders/OrderDetailsPage';
+import { OrdersPage } from '@/pages/Orders/OrdersPage';
+import { SettingsPage } from '@/pages/Settings/SettingsPage';
+import { SuppliersPage } from '@/pages/Suppliers/SuppliersPage';
 
 // Configurar dayjs para suporte internacional
 dayjs.extend(utc);
@@ -62,8 +61,8 @@ const dayjsLocale = getLocaleFromLanguage(currentLanguage);
 dayjs.locale(dayjsLocale);
 
 // Configurar timezone padrão (pode ser dinâmico baseado no país)
-const defaultTimezone = currentLanguage === 'zh-CN' ? 'Asia/Shanghai' : 
-                       currentLanguage === 'en' ? 'America/New_York' : 
+const defaultTimezone = currentLanguage === 'zh-CN' ? 'Asia/Shanghai' :
+                       currentLanguage === 'en' ? 'America/New_York' :
                        'America/Sao_Paulo';
 dayjs.tz.setDefault(defaultTimezone);
 

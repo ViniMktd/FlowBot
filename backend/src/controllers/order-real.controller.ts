@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { OrderService } from '../services/order-real.service';
 import { logger } from '../config/logger';
+import { OrderService } from '../services/order-real.service';
 import { formatCurrency } from '../utils/brazilian';
 
 const orderService = new OrderService();

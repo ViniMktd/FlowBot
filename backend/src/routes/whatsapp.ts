@@ -1,7 +1,7 @@
-import { Router } from 'express';
 import { WhatsAppController } from '@/controllers/whatsapp.controller';
 import { authentication } from '@/middleware/auth';
 import { validateRequest } from '@/middleware/validation';
+import { Router } from 'express';
 import { z } from 'zod';
 
 const router = Router();

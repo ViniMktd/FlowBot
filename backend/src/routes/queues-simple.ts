@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { logger } from '../config/logger';
 import {
-  orderProcessingQueue,
-  supplierCommunicationQueue,
-  whatsappQueue,
-  trackingQueue,
-  notificationQueue
+    notificationQueue,
+    orderProcessingQueue,
+    supplierCommunicationQueue,
+    trackingQueue,
+    whatsappQueue
 } from '../config/queues';
 
 const router = Router();

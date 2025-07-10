@@ -39,7 +39,7 @@ O FlowBot é uma plataforma completa que automatiza todo o fluxo de e-commerce i
 
 ```
 1. 🛒 Cliente compra no Shopify
-2. 📨 Shopify envia webhook para FlowBot  
+2. 📨 Shopify envia webhook para FlowBot
 3. 💾 FlowBot sincroniza pedido no sistema
 4. 📢 Fornecedor recebe notificação
 5. 📦 Fornecedor clica "Despachar Pedido"
@@ -56,7 +56,7 @@ O FlowBot é uma plataforma completa que automatiza todo o fluxo de e-commerce i
 
 ### **Backend:**
 - 🟦 **Node.js + TypeScript**
-- ⚡ **Express.js** 
+- ⚡ **Express.js**
 - 🗄️ **PostgreSQL + Prisma**
 - 📮 **Redis + Bull**
 - 🔐 **JWT + bcrypt**
@@ -192,7 +192,7 @@ POST /api/shipping/order/:orderId/dispatch
 
 ### **Idiomas:**
 - 🇧🇷 **Português** (Brasil)
-- 🇺🇸 **English** (Estados Unidos)  
+- 🇺🇸 **English** (Estados Unidos)
 - 🇨🇳 **中文** (China)
 
 ### **Detecção Automática:**

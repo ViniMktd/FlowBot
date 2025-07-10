@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { ZodSchema, ZodError } from 'zod';
 import { logger } from '@/config/logger';
+import { NextFunction, Request, Response } from 'express';
+import { ZodError, ZodSchema } from 'zod';
 
 // Middleware para validação de requests usando Zod
 export function validateRequest(schema: ZodSchema) {

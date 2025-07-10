@@ -34,19 +34,19 @@ export enum JobType {
   ROUTE_ORDER = 'route-order',
   UPDATE_ORDER_STATUS = 'update-order-status',
   CANCEL_ORDER = 'cancel-order',
-  
+
   // Comunicação com fornecedores
   SEND_ORDER_TO_SUPPLIER = 'send-order-to-supplier',
   REQUEST_TRACKING = 'request-tracking',
   UPLOAD_PRODUCT_PHOTOS = 'upload-product-photos',
   CONFIRM_SUPPLIER_RECEIPT = 'confirm-supplier-receipt',
-  
+
   // Notificações
   SEND_WHATSAPP_MESSAGE = 'send-whatsapp-message',
   SEND_EMAIL = 'send-email',
   NOTIFY_CUSTOMER = 'notify-customer',
   NOTIFY_SUPPLIER = 'notify-supplier',
-  
+
   // Tracking
   UPDATE_TRACKING_STATUS = 'update-tracking-status',
   FETCH_TRACKING_UPDATES = 'fetch-tracking-updates',
@@ -274,16 +274,16 @@ export const getQueueStats = async () => {
 // Inicialização das filas
 export const initializeQueues = async () => {
   logger.info('Inicializando sistema de filas...');
-  
+
   try {
     // Configurar monitoramento
     setupQueueMonitoring();
-    
+
     // Agendar limpeza de jobs antigos (a cada 6 horas)
     setInterval(cleanOldJobs, 6 * 60 * 60 * 1000);
-    
+
     logger.info('Sistema de filas inicializado com sucesso');
-    
+
     return {
       orderProcessingQueue,
       supplierCommunicationQueue,
@@ -301,7 +301,7 @@ export const initializeQueues = async () => {
 // Graceful shutdown
 export const closeQueues = async () => {
   logger.info('Fechando filas...');
-  
+
   const queues = [
     orderProcessingQueue,
     supplierCommunicationQueue,

@@ -1,10 +1,10 @@
+import { prisma } from '@/config/database';
+import { logger } from '@/config/logger';
+import { cache } from '@/config/redis';
+import { AppError } from '@/utils/errors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import { prisma } from '@/config/database';
-import { cache } from '@/config/redis';
-import { logger } from '@/config/logger';
-import { AppError } from '@/utils/errors';
 
 interface ILoginData {
   email: string;

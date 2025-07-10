@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { logger } from '../config/logger';
-import { 
-  orderProcessingQueue,
-  supplierCommunicationQueue,
-  whatsappQueue,
-  trackingQueue,
-  notificationQueue
+import {
+    notificationQueue,
+    orderProcessingQueue,
+    supplierCommunicationQueue,
+    trackingQueue,
+    whatsappQueue
 } from '../config/queues';
 
 const router = Router();
@@ -22,7 +22,7 @@ router.get('/queues', async (_req, res) => {
       tracking: await getQueueBasicStats(trackingQueue),
       notification: await getQueueBasicStats(notificationQueue)
     };
-    
+
     res.json({
       success: true,
       data: {
@@ -97,8 +97,8 @@ router.post('/test/process-order', async (req, res) => {
  */
 router.post('/test/send-whatsapp', async (req, res) => {
   try {
-    const { 
-      phone = '+5511999999999', 
+    const {
+      phone = '+5511999999999',
       customerName = 'Cliente Teste',
       orderNumber = 'TEST-001',
       type = 'sendOrderConfirmation'
@@ -138,7 +138,7 @@ router.post('/test/send-whatsapp', async (req, res) => {
  */
 router.post('/test/supplier-communication', async (req, res) => {
   try {
-    const { 
+    const {
       orderId = 'test-order-123',
       supplierId = 'supplier-001',
       type = 'sendOrderToSupplier'
@@ -192,7 +192,7 @@ router.post('/test/supplier-communication', async (req, res) => {
  */
 router.post('/test/tracking', async (req, res) => {
   try {
-    const { 
+    const {
       orderId = 'test-order-123',
       trackingCode = 'BR123456789',
       type = 'updateOrderTracking'

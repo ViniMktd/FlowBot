@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { OrderService } from '../services/order.service';
 import { logger } from '../config/logger';
+import { OrderService } from '../services/order.service';
 import { PaginationParams } from '../types';
 
 export class OrderController {

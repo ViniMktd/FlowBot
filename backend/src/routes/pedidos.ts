@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import {
-  createPedido,
-  getPedidoById,
-  getPedidoByShopifyId,
-  listPedidos,
-  updatePedido,
-  cancelPedido,
-  getEstatisticas,
-  healthCheck
+    cancelPedido,
+    createPedido,
+    getEstatisticas,
+    getPedidoById,
+    getPedidoByShopifyId,
+    healthCheck,
+    listPedidos,
+    updatePedido
 } from '../controllers/pedido.controller';
 
 const router = Router();

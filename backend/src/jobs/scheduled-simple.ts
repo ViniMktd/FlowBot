@@ -1,9 +1,9 @@
 import { CronJob } from 'cron';
 import { logger } from '../config/logger';
 import {
-  trackingQueue,
-  whatsappQueue,
-  supplierCommunicationQueue
+    supplierCommunicationQueue,
+    trackingQueue,
+    whatsappQueue
 } from '../config/queues';
 
 /**

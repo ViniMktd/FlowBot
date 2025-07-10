@@ -1,8 +1,8 @@
-import { BaseService } from './base.service';
+import { PrismaClient } from '@prisma/client';
 import { logger } from '../config/logger';
 import { ApiResponse } from '../types';
+import { BaseService } from './base.service';
 import { i18nService, t } from './i18n.service';
-import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -33,8 +33,8 @@ export class WhatsAppService extends BaseService {
    * Enviar mensagem de texto com suporte internacional
    */
   async sendTextMessage(
-    to: string, 
-    message: string, 
+    to: string,
+    message: string,
     language: string = 'pt-BR'
   ): Promise<ApiResponse<any>> {
     try {
@@ -127,9 +127,9 @@ export class WhatsAppService extends BaseService {
    * Enviar confirmação de pedido com suporte internacional
    */
   async sendOrderConfirmation(
-    to: string, 
-    customerName: string, 
-    orderNumber: string, 
+    to: string,
+    customerName: string,
+    orderNumber: string,
     total: number,
     currency: string = 'BRL',
     language: string = 'pt-BR'
@@ -137,17 +137,17 @@ export class WhatsAppService extends BaseService {
     try {
       // Detectar configurações de país baseado no idioma
       const countryConfig = await this.getCountryConfigByLanguage(language);
-      
+
       // Formatar valor na moeda correta
       const formattedTotal = this.formatCurrency(total, currency, language);
-      
+
       // Buscar template traduzido
       const greeting = await t('greeting', language, { name: customerName });
       const orderConfirmed = await t('order.confirmed', language);
       const totalLabel = await t('order.total', language);
       const preparingMessage = await t('order.preparing', language);
       const thankYou = await t('thank_you', language);
-      
+
       const message = `${greeting} 🎉\n\n${orderConfirmed} #${orderNumber}\n\n💰 ${totalLabel}: ${formattedTotal}\n\n${preparingMessage}\n\n${thankYou} 🛍️`;
 
       return await this.sendTextMessage(to, message, language);
@@ -167,9 +167,9 @@ export class WhatsAppService extends BaseService {
    * Enviar notificação de envio com suporte internacional
    */
   async sendShippingNotification(
-    to: string, 
-    customerName: string, 
-    orderNumber: string, 
+    to: string,
+    customerName: string,
+    orderNumber: string,
     trackingCode: string,
     carrier?: string,
     language: string = 'pt-BR'
@@ -181,10 +181,10 @@ export class WhatsAppService extends BaseService {
       const trackingLabel = await t('tracking.code', language, { code: trackingCode });
       const trackingInstructions = await t('tracking.instructions', language);
       const seeYouSoon = await t('order.see_you_soon', language);
-      
+
       // Obter URL de rastreamento baseado no carrier e país
       const trackingUrl = this.getTrackingUrl(trackingCode, carrier, language);
-      
+
       const message = `🚚 ${greeting}\n\n${orderShipped} #${orderNumber}!\n\n📦 ${trackingLabel}\n\n${trackingInstructions}: ${trackingUrl}\n\n${seeYouSoon} 😊`;
 
       return await this.sendTextMessage(to, message, language);
@@ -447,7 +447,7 @@ export class WhatsAppService extends BaseService {
    */
   private extractCountryCodeFromPhone(phone: string): string {
     const cleanPhone = phone.replace(/[^\d]/g, '');
-    
+
     // Mapeamento de prefixos para códigos de país
     if (cleanPhone.startsWith('55')) return 'BR';  // Brasil
     if (cleanPhone.startsWith('86')) return 'CN';  // China
@@ -460,7 +460,7 @@ export class WhatsAppService extends BaseService {
     if (cleanPhone.startsWith('44')) return 'GB';  // Reino Unido
     if (cleanPhone.startsWith('81')) return 'JP';  // Japão
     if (cleanPhone.startsWith('82')) return 'KR';  // Coreia do Sul
-    
+
     return 'BR'; // Default
   }
 

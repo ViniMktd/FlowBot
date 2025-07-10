@@ -59,14 +59,14 @@ model Customer {
   email                String?
   phone                String?
   countryId            String?  @map("country_id")
-  
+
   // Brazilian documents (backward compatibility)
   cpfCnpj              String?  @map("cpf_cnpj") // CPF or CNPJ
-  
+
   // International documents
   documentType         String?  @map("document_type") // passport, id_card, etc.
   documentNumber       String?  @map("document_number")
-  
+
   // Address fields (flexible for international)
   addressCep           String?  @map("address_cep") // CEP format: 00000-000
   addressStreet        String?  @map("address_street")
@@ -76,12 +76,12 @@ model Customer {
   addressCity          String?  @map("address_city")
   addressState         String?  @map("address_state") // State/Province
   addressZipCode       String?  @map("address_zip_code") // International postal code
-  
+
   // Communication preferences
   preferredLanguage    String?  @default("pt-BR") @map("preferred_language")
   whatsappConsent      Boolean  @default(false) @map("whatsapp_consent")
   lgpdConsentDate      DateTime? @map("lgpd_consent_date")
-  
+
   createdAt            DateTime @default(now()) @map("created_at")
   updatedAt            DateTime @updatedAt @map("updated_at")
 
@@ -100,26 +100,26 @@ model Supplier {
   companyName            String  @map("company_name")
   tradeName              String? @map("trade_name")
   countryId              String? @map("country_id")
-  
+
   // Brazilian documents (backward compatibility)
   cnpj                   String? @map("cnpj") // Brazilian company registration
-  
+
   // International documents
   businessLicense        String? @map("business_license")
   taxId                  String? @map("tax_id")
-  
+
   // Contact information
   email                  String
   phone                  String?
   contactPerson          String? @map("contact_person")
   preferredLanguage      String? @default("en") @map("preferred_language")
   timeZone               String? @map("time_zone")
-  
+
   // API integration
   apiEndpoint            String? @map("api_endpoint")
   apiKey                 String? @map("api_key")
   notificationEmail      String? @map("notification_email")
-  
+
   // Address fields (flexible for international)
   addressCep             String? @map("address_cep")
   addressStreet          String? @map("address_street")
@@ -127,16 +127,16 @@ model Supplier {
   addressCity            String? @map("address_city")
   addressState           String? @map("address_state")
   addressZipCode         String? @map("address_zip_code")
-  
+
   // Performance metrics
   averageProcessingTime  Int?    @map("average_processing_time") // in hours
   performanceRating      Decimal @default(5.0) @map("performance_rating") @db.Decimal(3,2)
-  
+
   // Operational settings
   active                 Boolean @default(true)
   minimumOrderValue      Decimal? @map("minimum_order_value") @db.Decimal(10,2)
   shippingMethods        String[] @map("shipping_methods")
-  
+
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")
 
@@ -158,30 +158,30 @@ model Order {
   customerId            String      @map("customer_id")
   supplierId            String?     @map("supplier_id")
   countryId             String?     @map("country_id") // Order destination country
-  
+
   // Order details
   status                OrderStatus @default(PENDING)
   totalAmount           Decimal     @map("total_amount") @db.Decimal(10,2)
   currency              String      @default("BRL")
   exchangeRate          Decimal?    @map("exchange_rate") @db.Decimal(10,6)
   shippingAmount        Decimal?    @map("shipping_amount") @db.Decimal(10,2)
-  
+
   // International shipping
   shippingType          String?     @map("shipping_type") // domestic, international
   customsValue          Decimal?    @map("customs_value") @db.Decimal(10,2)
   customsDescription    String?     @map("customs_description")
-  
+
   // Payment and tracking
   paymentStatus         String?     @map("payment_status")
   trackingCode          String?     @map("tracking_code")
   carrier               String?
   estimatedDelivery     DateTime?   @map("estimated_delivery")
   shopifyFulfillmentId  BigInt?     @map("shopify_fulfillment_id")
-  
+
   // Communication preferences
   customerLanguage      String?     @default("pt-BR") @map("customer_language")
   supplierLanguage      String?     @default("en") @map("supplier_language")
-  
+
   createdAt             DateTime    @default(now()) @map("created_at")
   updatedAt             DateTime    @updatedAt @map("updated_at")
 
