@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -23,8 +23,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { SocketProvider } from '@/providers/SocketProvider';
+import { ThemeProvider as AppThemeProvider } from '@/providers/ThemeProvider';
 import { persistor, store } from '@/store';
-import { theme } from '@/theme';
 
 // Páginas
 import { DashboardLayout } from '@/layouts/DashboardLayout';
@@ -102,8 +102,7 @@ function App() {
         <Provider store={store}>
           <PersistGate loading={<LoadingScreen />} persistor={persistor}>
             <QueryClientProvider client={queryClient}>
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
+              <AppThemeProvider>
                 <LocalizationProvider
                   dateAdapter={AdapterDayjs}
                   adapterLocale={dayjsLocale}
@@ -184,7 +183,7 @@ function App() {
                     </AuthProvider>
                   </Suspense>
                 </LocalizationProvider>
-              </ThemeProvider>
+              </AppThemeProvider>
 
               {/* React Query DevTools apenas em desenvolvimento */}
               {process.env.NODE_ENV === 'development' && (

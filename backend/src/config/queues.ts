@@ -298,6 +298,22 @@ export const initializeQueues = async () => {
   }
 };
 
+// Setup function for initialization
+export const setupQueues = async () => {
+  logger.info('🔄 Configurando sistema de filas...');
+  
+  try {
+    // Initialize queues
+    const queueSystem = await initializeQueues();
+    
+    logger.info('✅ Sistema de filas configurado com sucesso');
+    return queueSystem;
+  } catch (error) {
+    logger.error('❌ Erro ao configurar sistema de filas', error);
+    throw error;
+  }
+};
+
 // Graceful shutdown
 export const closeQueues = async () => {
   logger.info('Fechando filas...');

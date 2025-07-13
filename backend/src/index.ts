@@ -12,9 +12,9 @@ import { Server as SocketIOServer } from 'socket.io';
 
 // Import configurations
 import { logger } from '@/config/logger';
-// import { connectDatabase } from '@/config/database';
-// import { connectRedis } from '@/config/redis';
-// import { setupQueues } from '@/config/queues';
+import { connectDatabase } from '@/config/database';
+import { connectRedis } from '@/config/redis';
+import { setupQueues } from '@/config/queues';
 
 // Import workers
 import { registerWorkers, shutdownWorkers } from '@/workers';
@@ -197,16 +197,31 @@ async function gracefulShutdown(signal: string) {
 async function startServer() {
   try {
     // Initialize database
-    // await connectDatabase();
-    logger.info('✅ Banco de dados PostgreSQL conectado (simulado)');
+    try {
+      await connectDatabase();
+      logger.info('✅ Banco de dados PostgreSQL conectado');
+    } catch (error) {
+      logger.error('❌ Erro ao conectar banco de dados:', error);
+      logger.warn('⚠️  Continuando sem banco de dados - funcionalidade limitada');
+    }
 
     // Initialize Redis
-    // await connectRedis();
-    logger.info('✅ Redis conectado (simulado)');
+    try {
+      await connectRedis();
+      logger.info('✅ Redis conectado');
+    } catch (error) {
+      logger.error('❌ Erro ao conectar Redis:', error);
+      logger.warn('⚠️  Continuando sem Redis - cache desabilitado');
+    }
 
     // Setup background job queues
-    // await setupQueues();
-    logger.info('✅ Filas de processamento configuradas (simulado)');
+    try {
+      await setupQueues();
+      logger.info('✅ Filas de processamento configuradas');
+    } catch (error) {
+      logger.error('❌ Erro ao configurar filas:', error);
+      logger.warn('⚠️  Continuando sem filas - processamento síncrono');
+    }
 
     // Register workers
     registerWorkers();

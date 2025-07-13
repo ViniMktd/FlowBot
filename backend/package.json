@@ -4,10 +4,10 @@
   "description": "FlowBot Backend API - Sistema de Automação de Fulfillment",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon src/simple-index.ts",
-    "dev-full": "nodemon src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "dev-simple": "nodemon src/simple-index.ts",
     "build": "tsc",
-    "start": "node dist/simple-index.js",
+    "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
